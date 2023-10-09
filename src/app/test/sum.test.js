@@ -123,3 +123,41 @@ test("jest.fn()のサンプル", () => {
   // mockFnの引数に1, 2, 3, 4が渡されていないこと
   expect(mockFn).not.toHaveBeenCalledWith(1, 2, 3, 4);
 });
+
+import { scouter } from "../scouter";
+
+// ./calc.tsのtenThousandTimesをモック化
+jest.mock("../calc", () => {
+  const originalModule = jest.requireActual("../calc");
+  return {
+    ...Object.assign({}, originalModule),
+    tenThousandTimes: (fightingPower) => `${fightingPower}万`,
+  };
+});
+
+test("戦闘力 53万", () => {
+  const result = scouter(53);
+
+  expect(result).toBe("私の戦闘力は53万です。");
+  expect(result).not.toBe("私の戦闘力は530000です。");
+});
+
+test("戦闘力 計測不可能", () => {
+  const result = scouter(100);
+
+  expect(result).toBe("私の戦闘力は計測不可能です。");
+  expect(result).not.toBe("私の戦闘力はundefinedです。");
+});
+
+// spyOnの使い方
+// import * as calc from "../calc";
+
+// test("戦闘力 0.0053", () => {
+//   jest
+//     .spyOn(calc, "tenThousandTimes")
+//     .mockImplementation((fightingPower) => fightingPower / 10000);
+//   const result = scouter(53);
+
+//   expect(result).toBe("私の戦闘力は0.0053です。");
+//   expect(result).not.toBe("私の戦闘力は530000です。");
+// });

@@ -1,5 +1,13 @@
 "use strict";
 
+var _scouter = require("../scouter");
+
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(source, true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(source).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 test("object assignment", function () {
   var data = {
     one: 1
@@ -162,3 +170,31 @@ test("jest.fn()のサンプル", function () {
 
   expect(mockFn).not.toHaveBeenCalledWith(1, 2, 3, 4);
 });
+// ./calc.tsのtenThousandTimesをモック化
+jest.mock("../calc", function () {
+  var originalModule = jest.requireActual("../calc");
+  return _objectSpread({}, Object.assign({}, originalModule), {
+    tenThousandTimes: function tenThousandTimes(fightingPower) {
+      return "".concat(fightingPower, "\u4E07");
+    }
+  });
+});
+test("戦闘力 53万", function () {
+  var result = (0, _scouter.scouter)(53);
+  expect(result).toBe("私の戦闘力は53万です。");
+  expect(result).not.toBe("私の戦闘力は530000です。");
+});
+test("戦闘力 計測不可能", function () {
+  var result = (0, _scouter.scouter)(100);
+  expect(result).toBe("私の戦闘力は計測不可能です。");
+  expect(result).not.toBe("私の戦闘力はundefinedです。");
+}); // spyOnの使い方
+// import * as calc from "../calc";
+// test("戦闘力 0.0053", () => {
+//   jest
+//     .spyOn(calc, "tenThousandTimes")
+//     .mockImplementation((fightingPower) => fightingPower / 10000);
+//   const result = scouter(53);
+//   expect(result).toBe("私の戦闘力は0.0053です。");
+//   expect(result).not.toBe("私の戦闘力は530000です。");
+// });
