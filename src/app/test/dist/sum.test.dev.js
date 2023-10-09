@@ -116,3 +116,37 @@ test("the data is peanut butter", function _callee() {
     }
   });
 });
+test("the fetch fails with an error", function _callee2() {
+  var data;
+  return regeneratorRuntime.async(function _callee2$(_context3) {
+    while (1) {
+      switch (_context3.prev = _context3.next) {
+        case 0:
+          expect.assertions(1);
+          _context3.prev = 1;
+          _context3.next = 4;
+          return regeneratorRuntime.awrap(fetchData());
+
+        case 4:
+          data = _context3.sent;
+          expect(data).toBe("peanut butter");
+          _context3.next = 11;
+          break;
+
+        case 8:
+          _context3.prev = 8;
+          _context3.t0 = _context3["catch"](1);
+          expect(_context3.t0).toMatch("error");
+
+        case 11:
+        case "end":
+          return _context3.stop();
+      }
+    }
+  }, null, null, [[1, 8]]);
+});
+test("the data is peanut butter", function () {
+  return expect(fetchData()).resolves.toBe("peanut butter");
+}); // test("the fetch fails with an error", () => {
+//   return expect(fetchData()).rejects.toMatch("error");
+// });
