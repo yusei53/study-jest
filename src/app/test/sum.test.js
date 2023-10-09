@@ -1,9 +1,3 @@
-const sum = require("../sum");
-
-test("adds 1 + 2 to equal 3", () => {
-  expect(sum(1, 2)).toBe(3);
-});
-
 test("object assignment", () => {
   const data = { one: 1 };
   data["two"] = 2;
@@ -63,4 +57,36 @@ const shoppingList = [
 test("the shopping list has milk on it", () => {
   expect(shoppingList).toContain("milk");
   expect(new Set(shoppingList)).toContain("milk");
+});
+
+function compileAndroidCode() {
+  throw new Error("you are using the wrong JDK!");
+}
+
+test("compiling android goes as expected", () => {
+  expect(() => compileAndroidCode()).toThrow();
+  expect(() => compileAndroidCode()).toThrow(Error);
+
+  // You can also use a string that must be contained in the error message or a regexp
+  expect(() => compileAndroidCode()).toThrow("you are using the wrong JDK");
+  expect(() => compileAndroidCode()).toThrow(/JDK/);
+
+  // Or you can match an exact error message using a regexp like below
+  // expect(() => compileAndroidCode()).toThrow(/^you are using the wrong JDK$/); // Test fails
+  expect(() => compileAndroidCode()).toThrow(/^you are using the wrong JDK!$/); // Test pass
+});
+
+async function fetchData() {
+  return "peanut butter"; // 仮想のデータを返す例
+}
+
+test("the data is peanut butter", () => {
+  return fetchData().then((data) => {
+    expect(data).toBe("peanut butter");
+  });
+});
+
+test("the data is peanut butter", async () => {
+  const data = await fetchData();
+  expect(data).toBe("peanut butter");
 });
